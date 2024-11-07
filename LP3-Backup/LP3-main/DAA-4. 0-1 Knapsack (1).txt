@@ -1,0 +1,65 @@
+import java.util.Scanner;
+
+public class Knapsack01 {
+    // Method to solve the 0-1 Knapsack problem using Dynamic Programming
+    public static int knapsack(int[] weights, int[] values, int n, int capacity) {
+        // Create a DP table to store the maximum values for each capacity
+        int[][] dp = new int[n + 1][capacity + 1];
+        
+        // Build the DP table in a bottom-up manner
+        for (int i = 1; i <= n; i++) {
+            for (int w = 1; w <= capacity; w++) { // Start w from 1
+                if (weights[i - 1] <= w) {
+                    // Max value of including or excluding the current item
+                    dp[i][w] = Math.max(dp[i - 1][w], dp[i - 1][w - weights[i - 1]] + values[i - 1]);
+                } else {
+                    // Current item cannot be included (weight exceeds capacity)
+                    dp[i][w] = dp[i - 1][w];
+                }
+            }
+        }
+        // Return the value in the last cell, which is the maximum value we can achieve
+        return dp[n][capacity];
+    }
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        
+        // Step 1: Input the number of items
+        System.out.print("Enter the number of items: ");
+        int n = sc.nextInt();
+        
+        // Step 2: Input the weight and value of each item
+        int[] weights = new int[n];
+        int[] values = new int[n];
+        for (int i = 0; i < n; i++) {
+            System.out.print("Enter weight and value of item " + (i + 1) + ": ");
+            weights[i] = sc.nextInt();
+            values[i] = sc.nextInt();
+        }
+        
+        // Step 3: Input the knapsack capacity
+        System.out.print("Enter the knapsack capacity: ");
+        int capacity = sc.nextInt();
+
+        // Step 4: Solve the knapsack problem using dynamic programming
+        int maxValue = knapsack(weights, values, n, capacity);
+        
+        // Step 5: Print the result
+        System.out.println("Maximum value we can obtain = " + maxValue);
+        
+        sc.close(); // Close the scanner to prevent resource leaks
+    }
+}
+
+
+OUTPUT:
+
+Enter the number of items: 3
+Enter weight and value of item 1: 10 65
+Enter weight and value of item 2: 20 33
+Enter weight and value of item 3: 45 33
+Enter the knapsack capacity: 100
+Maximum value we can obtain = 131
+
+=== Code Execution Successful ===

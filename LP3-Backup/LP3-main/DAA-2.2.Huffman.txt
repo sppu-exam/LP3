@@ -1,0 +1,125 @@
+import java.util.PriorityQueue;
+import java.util.Scanner;
+import java.util.HashMap;
+import java.util.Map;
+
+// Node class representing each character and its frequency
+class Node {
+    char ch;
+    int frequency;
+    Node left, right;
+
+    public Node(char ch, int frequency) {
+        this.ch = ch;
+        this.frequency = frequency;
+        left = right = null;
+    }
+}
+
+public class HuffmanEncoding {
+
+    // Comparator for Priority Queue (min-heap)
+    static class NodeComparator implements java.util.Comparator<Node> {
+        @Override
+        public int compare(Node x, Node y) {
+            return x.frequency - y.frequency;
+        }
+    }
+
+    // Method to build the Huffman Tree
+    public static Node buildHuffmanTree(Map<Character, Integer> freqMap) {
+        PriorityQueue<Node> priorityQueue = new PriorityQueue<>(new NodeComparator());
+
+        // Create a leaf node for each character and add it to the priority queue
+        for (Map.Entry<Character, Integer> entry : freqMap.entrySet()) {
+            priorityQueue.add(new Node(entry.getKey(), entry.getValue()));
+        }
+
+        // Iterate until there is only one node in the queue (the root of the Huffman Tree)
+        while (priorityQueue.size() > 1) {
+            // Remove the two nodes with the lowest frequency
+            Node left = priorityQueue.poll();
+            Node right = priorityQueue.poll();
+
+            // Create a new internal node with these two nodes as children
+            // The frequency of this new node is the sum of the two node frequencies
+            Node newNode = new Node('-', left.frequency + right.frequency);
+            newNode.left = left;
+            newNode.right = right;
+
+            // Add the new node to the priority queue
+            priorityQueue.add(newNode);
+        }
+
+        // Return the root of the Huffman Tree
+        return priorityQueue.poll();
+    }
+
+    // Method to assign codes to characters by traversing the Huffman Tree
+    public static void assignHuffmanCodes(Node root, String code, Map<Character, String> huffmanCode) {
+        if (root == null) {
+            return;
+        }
+
+        // If this node is a leaf node, it contains a character
+        if (root.left == null && root.right == null) {
+            huffmanCode.put(root.ch, code);
+        }
+
+        // Traverse the left subtree with '0'
+        assignHuffmanCodes(root.left, code + "0", huffmanCode);
+        // Traverse the right subtree with '1'
+        assignHuffmanCodes(root.right, code + "1", huffmanCode);
+    }
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        // Step 1: Input the string to encode
+        System.out.print("Enter a string to encode: ");
+        String input = sc.nextLine();
+
+        // Step 2: Count the frequency of each character
+        Map<Character, Integer> freqMap = new HashMap<>();
+        for (char ch : input.toCharArray()) {
+            freqMap.put(ch, freqMap.getOrDefault(ch, 0) + 1);
+        }
+
+        // Step 3: Build the Huffman Tree
+        Node root = buildHuffmanTree(freqMap);
+
+        // Step 4: Assign Huffman Codes to characters
+        Map<Character, String> huffmanCode = new HashMap<>();
+        assignHuffmanCodes(root, "", huffmanCode);
+
+        // Step 5: Print the Huffman Codes for each character
+        System.out.println("Huffman Codes for each character:");
+        for (Map.Entry<Character, String> entry : huffmanCode.entrySet()) {
+            System.out.println(entry.getKey() + ": " + entry.getValue());
+        }
+
+        // Step 6: Encode the input string
+        StringBuilder encodedString = new StringBuilder();
+        for (char ch : input.toCharArray()) {
+            encodedString.append(huffmanCode.get(ch));
+        }
+
+        System.out.println("Encoded String: " + encodedString);
+        sc.close();
+    }
+}
+
+
+
+OUTPUT:-
+
+ Enter a string to encode: Pratik
+Huffman Codes for each character:
+P: 00
+a: 101
+r: 111
+t: 110
+i: 100
+k: 01
+Encoded String: 0011110111010001
+

@@ -1,0 +1,92 @@
+import java.util.Arrays;
+import java.util.Scanner;
+
+class Job {
+    int id; // Job ID
+    int deadline; // Deadline for the job
+    int profit; // Profit if the job is completed on time
+
+    Job(int id, int deadline, int profit) {
+        this.id = id;
+        this.deadline = deadline;
+        this.profit = profit;
+    }
+}
+
+public class JobSequencing {
+
+    // Function to find the maximum profit sequence of jobs
+    static void jobSequencing(Job[] jobs, int n) {
+        // Sort the jobs based on profit in descending order
+        Arrays.sort(jobs, (a, b) -> b.profit - a.profit);
+
+        // To keep track of free time slots
+        boolean[] slot = new boolean[n];
+        // To store the result (sequence of jobs)
+        int[] result = new int[n];
+
+        // Initialize all slots to be free
+        for (int i = 0; i < n; i++) {
+            slot[i] = false;
+        }
+
+        // Iterate through all jobs
+        for (int i = 0; i < jobs.length; i++) {
+            // Find a free slot for this job (starting from its deadline)
+            for (int j = Math.min(n - 1, jobs[i].deadline - 1); j >= 0; j--) {
+                if (!slot[j]) { // If the slot is free
+                    slot[j] = true;
+                    result[j] = jobs[i].id;
+                    break;
+                }
+            }
+        }
+
+        // Print the result
+        System.out.println("The sequence of jobs to maximize profit is:");
+        for (int i = 0; i < n; i++) {
+            if (slot[i]) {
+                System.out.print("Job " + result[i] + " ");
+            }
+        }
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        // Get the number of jobs from the user
+        System.out.println("Enter the number of jobs:");
+        int n = scanner.nextInt();
+
+        Job[] jobs = new Job[n];
+
+        // Get the details of each job from the user
+        for (int i = 0; i < n; i++) {
+            System.out.println("Enter the details of job " + (i + 1) + " (ID, Deadline, Profit):");
+            int id = scanner.nextInt();
+            int deadline = scanner.nextInt();
+            int profit = scanner.nextInt();
+            jobs[i] = new Job(id, deadline, profit);
+        }
+
+        // Call the job sequencing function
+        jobSequencing(jobs, n);
+    }
+}
+
+
+OUTPUT:- 
+
+Enter the number of jobs:
+4
+Enter the details of job 1 (ID, Deadline, Profit):
+1 4 20
+Enter the details of job 2 (ID, Deadline, Profit):
+2 1 10
+Enter the details of job 3 (ID, Deadline, Profit):
+3 1 40
+Enter the details of job 4 (ID, Deadline, Profit):
+4 1 30
+
+The sequence of jobs to maximize profit is:
+Job 3 Job 1

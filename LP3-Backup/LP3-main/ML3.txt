@@ -1,0 +1,101 @@
+#cell1
+import pandas as pd
+
+
+#cell2
+df = pd.read_csv('Churn_Modelling.csv')
+df
+
+
+#cell3
+# df = df.drop(['RowNumber', 'CustomerId', 'Surname'], axis=1) ## column that
+help(pd.get_dummies)
+
+
+#cell4
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import LabelEncoder
+
+# Define the target variable
+y = df['Exited']
+
+# Drop non-predictive columns
+X = df.drop(['RowNumber', 'CustomerId', 'Surname', 'Exited'], axis=1) ##RnCiSurEx
+
+# Encode categorical features
+X['Gender'] = LabelEncoder().fit_transform(X['Gender'])  # note syntax
+print(X['Geography'].unique())
+# X = pd.get_dummies(X, columns=['Geography']) 
+X = pd.get_dummies(X, columns=['Geography'], drop_first=True) #for k-1 of k nodes 
+# Split the data into training and test sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+X
+
+
+#cell5
+from sklearn.preprocessing import StandardScaler
+
+scaler = StandardScaler()
+
+# Fit the scaler on the training data and transform both training and test data
+X_train = scaler.fit_transform(X_train)
+X_test = scaler.transform(X_test)
+# X_train
+
+#if tensorflow is not installed
+!pip install tensorflow
+
+
+
+#cell6
+# Step 4: Initialize and build the model
+import tensorflow as tf
+print("TensorFlow version:", tf.__version__)
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Dense, Dropout
+
+# Initialize the neural network
+model = Sequential()
+
+# Input layer and first hidden layer
+model.add(Dense(units=64, activation='relu', input_dim=X_train.shape[1]))
+
+# Second hidden layer
+model.add(Dense(units=32, activation='relu'))
+
+# Optional dropout layer for regularization
+model.add(Dropout(0.3))
+
+# Output layer
+model.add(Dense(units=1, activation='sigmoid'))
+
+# Compile the model
+model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
+
+# Train the model
+history = model.fit(X_train, y_train, epochs=50, batch_size=32, validation_split=0.2)
+
+# Evaluate the model
+loss, accuracy = model.evaluate(X_test, y_test)
+print(f"Test Accuracy: {accuracy:.2f}")
+
+
+
+#cell7
+from sklearn.metrics import confusion_matrix, classification_report
+
+# Predict on the test set
+y_pred = (model.predict(X_test) > 0.5).astype("int32")
+
+# Print the confusion matrix
+help(confusion_matrix)
+conf_matrix = confusion_matrix(y_test, y_pred)
+print("Confusion Matrix:")
+print(conf_matrix)
+
+
+#cell8
+# Print the classification report
+help(classification_report)
+print("Classification Report:")
+print(classification_report(y_test, y_pred)) 

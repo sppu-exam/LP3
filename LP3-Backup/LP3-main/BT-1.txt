@@ -1,0 +1,23 @@
+step1:
+
+Installation on chrome:
+
+https://chromewebstore.google.com/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn
+
+Installation on Firefox:
+
+https://chromewebstore.google.com/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn
+
+step 2: Click Add to Chrome.  
+step 3: Click Add Extension.  
+Step 4. Create an account. 
+
+4.1 :Click on the extension icon in the upper right corner to open MetaMask.
+
+4.2:To install the latest version and be up to date, click Try it now.  
+
+step 5: Click Continue.  
+
+step 6: create new password and view account.
+ 
+

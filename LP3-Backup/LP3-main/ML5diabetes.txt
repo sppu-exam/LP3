@@ -1,0 +1,68 @@
+import pandas as pd
+import tensorflow as tf
+from tensorflow import keras
+from sklearn.metrics import accuracy_score, confusion_matrix
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import MinMaxScaler
+
+data = pd.read_csv('Churn_Modelling.csv')
+
+X = data.drop(columns=['Exited', 'CustomerId', 'Surname', 'RowNumber'])  # Exclude columns
+y = data['Exited']  # Target
+
+data.head()
+
+data.info()
+
+data.describe()
+
+data.isnull().sum()
+
+# Step 3: Data Preprocessing
+# Handle missing values and encode categorical variables
+
+# Removing rows with missing values:
+data = data.drop(['CustomerId', 'Surname', 'RowNumber'], axis = 1)
+print(data.columns)
+
+# Replacing missing values with a specific value (e.g., mean):
+# data['column_name'].fillna(data['column_name'].mean(), inplace=True)
+
+# You need to ensure that the columns 'Geography' and 'Gender' are present in the DataFrame X
+# Add additional error handling to verify the column names
+columns_to_encode = ['Geography', 'Gender']
+for column in columns_to_encode:
+    if column not in X.columns:
+        raise ValueError(f"Column '{column}' not found in the DataFrame X.")
+
+# You need to encode categorical variables like "Geography" and "Gender" into numerical format using one-hot encoding.
+X = pd.get_dummies(X, columns=['Geography', 'Gender'], drop_first=True)
+
+scaler = MinMaxScaler()
+X = scaler.fit_transform(X)
+
+# Step 5: Initialize and Build the Model
+model = keras.Sequential([
+    keras.layers.Dense(64, activation='relu', input_shape=(X.shape[1],)),
+    keras.layers.Dense(32, activation='relu'),
+    keras.layers.Dense(1, activation='sigmoid')
+])
+
+model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
+
+# Split the data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Train the model
+model.fit(X_train, y_train, epochs=20, batch_size=32, verbose=1)
+
+# Step 6: Evaluate the Model
+y_pred = model.predict(X_test)
+y_pred = (y_pred > 0.5).astype(int)  # Convert to binary prediction
+
+accuracy = accuracy_score(y_test, y_pred)
+confusion = confusion_matrix(y_test, y_pred)
+
+print(f"Accuracy: {accuracy}")
+print("Confusion Matrix:")
+print(confusion)

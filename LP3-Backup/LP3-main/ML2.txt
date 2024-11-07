@@ -1,0 +1,62 @@
+#cell1
+import pandas as pd
+
+
+#cell2
+df = pd.read_csv('emails.csv')
+df.head()
+
+
+#cell3
+print(df['Prediction'].unique())
+
+
+#cell4
+df.isna().sum()
+
+
+#cell5
+df.describe()
+
+
+#cell6
+X = df.iloc[:, 1:3001]
+Y = df.iloc[:, -1]  ## prediction column
+X1=df.drop(['Email No.','Prediction'],axis=1)
+Y1=df['Prediction']
+X
+
+
+#cell7
+Y
+
+
+#cell8
+from sklearn.model_selection import train_test_split
+x_train,x_test,y_train,y_test=train_test_split(X,Y)
+
+
+
+#cell9
+from sklearn.neighbors import KNeighborsClassifier
+model=KNeighborsClassifier()
+model.fit(x_train,y_train)
+y_pred=model.predict(x_test)
+
+
+#cell10
+from sklearn.metrics import classification_report
+print(classification_report(y_test,y_pred))
+
+
+#cell11
+from sklearn.svm import SVC ## note syntax
+model=SVC()
+model.fit(x_train,y_train)
+y_pred=model.predict(x_test)
+
+
+
+#cell12
+from sklearn.metrics import classification_report
+print(classification_report(y_test,y_pred))

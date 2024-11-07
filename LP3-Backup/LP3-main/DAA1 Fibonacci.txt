@@ -1,0 +1,60 @@
+import java.util.Scanner;
+
+public class Fibonacci {
+    // Non-recursive Fibonacci (iterative)
+    public static int fibonacciNonRecursive(int n) {
+        if (n <= 1) {
+            return n;
+        }
+        int fib = 1;
+        int prevFib = 0;
+        for (int i = 2; i <= n; i++) {
+            int temp = fib;
+            fib = fib + prevFib;
+            prevFib = temp;
+        }
+        return fib;
+    }
+
+    // Recursive Fibonacci
+    public static int fibonacciRecursive(int n) {
+        if (n <= 1) {
+            return n;
+        }
+        return fibonacciRecursive(n - 1) + fibonacciRecursive(n - 2);
+    }
+
+    // Main method to test both approaches
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        System.out.print("Enter a number: ");
+        int n = sc.nextInt();
+
+        // Non-recursive approach
+        long startTime = System.nanoTime();
+        int resultNonRecursive = fibonacciNonRecursive(n);
+        long endTime = System.nanoTime();
+        System.out.println("Fibonacci (Non-recursive) of " + n + " is: " + resultNonRecursive);
+        System.out.println("Time taken (Non-recursive): " + (endTime - startTime) + " nanoseconds");
+
+        // Recursive approach
+        startTime = System.nanoTime();
+        int resultRecursive = fibonacciRecursive(n);
+        endTime = System.nanoTime();
+        System.out.println("Fibonacci (Recursive) of " + n + " is: " + resultRecursive);
+        System.out.println("Time taken (Recursive): " + (endTime - startTime) + " nanoseconds");
+
+        sc.close(); // Close the scanner to prevent resource leak
+    }
+}
+
+
+
+OUTPUT:
+Enter a number: 10
+Fibonacci (Non-recursive) of 10 is: 55
+Time taken (Non-recursive): 3629 nanoseconds
+Fibonacci (Recursive) of 10 is: 55
+Time taken (Recursive): 19330 nanoseconds
+
+=== Code Execution Successful ===
