@@ -29,3 +29,16 @@ for i in range(n):
 x, y = zip(*curve)
 plt.scatter(x, y)
 plt.show()
+
+
+# Gradient Descent parameters
+# learning_rate = 0.1  # Step size
+# n_iterations = 50    # Number of iterations
+# x_start = 2          # Starting point
+# These variables correspond to the parameters we discussed in the first code:
+
+# learning_rate is the step size (step_size).
+# n_iterations is the maximum number of steps (n).
+# x_start is the initial value for 
+# 𝑥
+# x (x_0).
